@@ -1,0 +1,24 @@
+.formMainBox {
+  height: 100vh;
+  width: 100%;
+  position: fixed;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .formBox {
+    display: flex;
+    width: 500px;
+    height: 600px;
+    flex-direction: column;
+    background-color: white;
+    padding: 1rem;
+    border-radius: 10px;
+    .inputField {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+}
