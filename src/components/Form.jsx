@@ -3,8 +3,12 @@ import "./Form.scss";
 import { useFormik } from "formik";
 import { formValidationSchema } from "../Schema/FormValidationSchema.js";
 import { v4 as uuidv4 } from "uuid";
-import { useDispatch } from "react-redux";
-import { addUser, toggleFormVisibility } from "./redux/slices/testSlice.js";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addUser,
+  editUser,
+  toggleFormVisibility,
+} from "./redux/slices/testSlice.js";
 import { IoIosCloseCircleOutline } from "react-icons/io";
 
 const Form = () => {
@@ -20,6 +24,11 @@ const Form = () => {
     hobbies: [],
     status: false,
   };
+
+  const selectedUser = useSelector((state) => state.testSlice.user);
+
+  const isEditMode = Boolean(selectedUser.id);
+
   const {
     values,
     errors,
@@ -29,16 +38,21 @@ const Form = () => {
     handleSubmit,
     setFieldValue,
   } = useFormik({
-    initialValues,
+    enableReinitialize: true,
+    initialValues: selectedUser,
     validationSchema: formValidationSchema,
     onSubmit: (values, { resetForm }) => {
       const newUser = {
         id: uuidv4(),
         ...values,
       };
-      // console.log(newUser);
-      dispatch(addUser(newUser));
+      if (isEditMode) {
+        dispatch(editUser(values));
+      } else {
+        dispatch(addUser(newUser));
+      }
       resetForm();
+      dispatch(toggleFormVisibility());
     },
   });
 
@@ -46,8 +60,11 @@ const Form = () => {
     <div className="formMainBox">
       <div className="formBox">
         <div className="closeBtn">
-          <IoIosCloseCircleOutline onClick={() => dispatch(toggleFormVisibility())} />
+          <IoIosCloseCircleOutline
+            onClick={() => dispatch(toggleFormVisibility())}
+          />
         </div>
+        <h2>{isEditMode ? "Edit User" : "Add User"}</h2>
         <form onSubmit={handleSubmit}>
           <div className="inputField">
             <label>Name</label>
@@ -58,7 +75,9 @@ const Form = () => {
               onChange={handleChange}
               onBlur={handleBlur}
             />
-            {touched.name && errors.name ? <p className="formError">{errors.name}</p> : null}
+            {touched.name && errors.name ? (
+              <p className="formError">{errors.name}</p>
+            ) : null}
           </div>
           <div className="inputField">
             <label>Email</label>
@@ -68,7 +87,9 @@ const Form = () => {
               value={values.email}
               onChange={handleChange}
             />
-            {touched.email && errors.email ? <p className="formError">{errors.email}</p> : null}
+            {touched.email && errors.email ? (
+              <p className="formError">{errors.email}</p>
+            ) : null}
           </div>
           <div className="inputField">
             <label>Mobile Number</label>
@@ -90,7 +111,9 @@ const Form = () => {
               value={values.dob}
               onChange={handleChange}
             />
-            {touched.dob && errors.dob ? <p className="formError">{errors.dob}</p> : null}
+            {touched.dob && errors.dob ? (
+              <p className="formError">{errors.dob}</p>
+            ) : null}
           </div>
           <div className="inputField">
             <label>Gender</label>
@@ -114,7 +137,9 @@ const Form = () => {
               />
               Female
             </label>
-            {touched.gender && errors.gender ? <p className="formError">{errors.gender}</p> : null}
+            {touched.gender && errors.gender ? (
+              <p className="formError">{errors.gender}</p>
+            ) : null}
           </div>
           <div className="inputField">
             <label>Address</label>
@@ -124,7 +149,9 @@ const Form = () => {
               value={values.address}
               onChange={handleChange}
             />
-            {touched.address && errors.address ? <p className="formError">{errors.address}</p> : null}
+            {touched.address && errors.address ? (
+              <p className="formError">{errors.address}</p>
+            ) : null}
           </div>
           <div className="inputField">
             <label>City</label>
@@ -134,7 +161,9 @@ const Form = () => {
               value={values.city}
               onChange={handleChange}
             />
-            {touched.city && errors.city ? <p className="formError">{errors.city}</p> : null}
+            {touched.city && errors.city ? (
+              <p className="formError">{errors.city}</p>
+            ) : null}
           </div>
           <div className="inputField">
             <label>Hobbies</label>
@@ -150,7 +179,9 @@ const Form = () => {
                 {hobby}
               </label>
             ))}
-            {touched.hobbies && errors.hobbies ? <p className="formError">{errors.hobbies}</p> : null}
+            {touched.hobbies && errors.hobbies ? (
+              <p className="formError">{errors.hobbies}</p>
+            ) : null}
           </div>
           <div className="inputField">
             <label>Status</label>
@@ -160,9 +191,11 @@ const Form = () => {
               value={values.status}
               onChange={handleChange}
             />
-            {touched.status && errors.status ? <p className="formError">{errors.status}</p> : null}
+            {touched.status && errors.status ? (
+              <p className="formError">{errors.status}</p>
+            ) : null}
           </div>
-          <button type="submit">Submit</button>
+          <button type="submit">{isEditMode ? "Edit" : "Add"}</button>
         </form>
       </div>
     </div>

@@ -4,18 +4,41 @@ import "./App.scss";
 import Form from "./components/Form";
 import { FaRegEdit } from "react-icons/fa";
 import { MdOutlineDelete } from "react-icons/md";
-import { toggleFormVisibility } from "./components/redux/slices/testSlice";
+import {
+  deleteUser,
+  setCurrentUser,
+  toggleFormVisibility,
+} from "./components/redux/slices/testSlice";
 
 const App = () => {
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.testSlice.userData);
   const formVisibility = useSelector((state) => state.testSlice.formVisibility);
-  console.log("formVisibility: ", formVisibility);
+  // console.log("formVisibility: ", formVisibility);
+
+  const emptyUser = {
+    id: "",
+    name: "",
+    email: "",
+    mobileno: "",
+    dob: "",
+    gender: null,
+    address: "",
+    city: "",
+    hobbies: [],
+    status: false,
+  };
+
   return (
     <>
       <div className="mainBox">
         <div className="tableBox">
-          <button onClick={() => dispatch(toggleFormVisibility())}>
+          <button
+            onClick={() => {
+              dispatch(setCurrentUser(emptyUser));
+              dispatch(toggleFormVisibility());
+            }}
+          >
             Add User
           </button>
           <table>
@@ -30,14 +53,21 @@ const App = () => {
             <tbody>
               {userData &&
                 userData.map((user, index) => (
-                  <tr>
+                  <tr key={index}>
                     <td>{index + 1}</td>
                     <td>{user.name}</td>
                     <td>{user.email}</td>
                     <td>
                       <div className="btn">
-                        <FaRegEdit />
-                        <MdOutlineDelete />
+                        <FaRegEdit
+                          onClick={() => {
+                            dispatch(setCurrentUser(user));
+                            dispatch(toggleFormVisibility());
+                          }}
+                        />
+                        <MdOutlineDelete
+                          onClick={() => dispatch(deleteUser(user.id))}
+                        />
                       </div>
                     </td>
                   </tr>

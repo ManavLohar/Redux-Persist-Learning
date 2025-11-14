@@ -15,7 +15,8 @@ const initialState = {
     hobbies: [],
     status: false,
   },
-  formVisibility: true,
+  formVisibility: false,
+  // user: {},
 };
 
 export const testSlice = createSlice({
@@ -28,9 +29,31 @@ export const testSlice = createSlice({
     addUser: (state, action) => {
       state.userData.push(action.payload);
     },
+    setCurrentUser: (state, action) => {
+      state.user = action.payload;
+    },
+    editUser: (state, action) => {
+      const updatedUser = action.payload;
+      const index = state.userData.findIndex(
+        (user) => user.id === updatedUser.id
+      );
+      if (index !== -1) {
+        state.userData[index] = updatedUser;
+      }
+    },
+    deleteUser: (state, action) => {
+      console.log(action.payload);
+      state.userData = userData.filter((user) => user.id !== action.payload);
+    },
   },
 });
 
-export const { toggleFormVisibility, addUser } = testSlice.actions;
+export const {
+  toggleFormVisibility,
+  addUser,
+  setCurrentUser,
+  editUser,
+  deleteUser,
+} = testSlice.actions;
 
 export default testSlice.reducer;
