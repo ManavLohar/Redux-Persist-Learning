@@ -4,6 +4,8 @@ import { useFormik } from "formik";
 import { formValidationSchema } from "../Schema/FormValidationSchema.js";
 import { v4 as uuidv4 } from "uuid";
 import { useDispatch } from "react-redux";
+import { addUser, toggleFormVisibility } from "./redux/slices/testSlice.js";
+import { IoIosCloseCircleOutline } from "react-icons/io";
 
 const Form = () => {
   const dispatch = useDispatch();
@@ -28,13 +30,13 @@ const Form = () => {
     setFieldValue,
   } = useFormik({
     initialValues,
-    formValidationSchema,
+    validationSchema: formValidationSchema,
     onSubmit: (values, { resetForm }) => {
       const newUser = {
         id: uuidv4(),
         ...values,
       };
-      console.log(newUser)
+      // console.log(newUser);
       dispatch(addUser(newUser));
       resetForm();
     },
@@ -43,6 +45,9 @@ const Form = () => {
   return (
     <div className="formMainBox">
       <div className="formBox">
+        <div className="closeBtn">
+          <IoIosCloseCircleOutline onClick={() => dispatch(toggleFormVisibility())} />
+        </div>
         <form onSubmit={handleSubmit}>
           <div className="inputField">
             <label>Name</label>
@@ -51,8 +56,9 @@ const Form = () => {
               name="name"
               value={values.name}
               onChange={handleChange}
+              onBlur={handleBlur}
             />
-            {touched.name && errors.name ? <p>{errors.name}</p> : null}
+            {touched.name && errors.name ? <p className="formError">{errors.name}</p> : null}
           </div>
           <div className="inputField">
             <label>Email</label>
@@ -62,7 +68,7 @@ const Form = () => {
               value={values.email}
               onChange={handleChange}
             />
-            {touched.email && errors.email ? <p>{errors.email}</p> : null}
+            {touched.email && errors.email ? <p className="formError">{errors.email}</p> : null}
           </div>
           <div className="inputField">
             <label>Mobile Number</label>
@@ -73,7 +79,7 @@ const Form = () => {
               onChange={handleChange}
             />
             {touched.mobileno && errors.mobileno ? (
-              <p>{errors.mobileno}</p>
+              <p className="formError">{errors.mobileno}</p>
             ) : null}
           </div>
           <div className="inputField">
@@ -84,7 +90,7 @@ const Form = () => {
               value={values.dob}
               onChange={handleChange}
             />
-            {touched.dob && errors.dob ? <p>{errors.dob}</p> : null}
+            {touched.dob && errors.dob ? <p className="formError">{errors.dob}</p> : null}
           </div>
           <div className="inputField">
             <label>Gender</label>
@@ -108,7 +114,7 @@ const Form = () => {
               />
               Female
             </label>
-            {touched.gender && errors.gender ? <p>{errors.gender}</p> : null}
+            {touched.gender && errors.gender ? <p className="formError">{errors.gender}</p> : null}
           </div>
           <div className="inputField">
             <label>Address</label>
@@ -118,7 +124,7 @@ const Form = () => {
               value={values.address}
               onChange={handleChange}
             />
-            {touched.name && errors.address ? <p>{errors.address}</p> : null}
+            {touched.address && errors.address ? <p className="formError">{errors.address}</p> : null}
           </div>
           <div className="inputField">
             <label>City</label>
@@ -128,7 +134,7 @@ const Form = () => {
               value={values.city}
               onChange={handleChange}
             />
-            {touched.city && errors.city ? <p>{errors.city}</p> : null}
+            {touched.city && errors.city ? <p className="formError">{errors.city}</p> : null}
           </div>
           <div className="inputField">
             <label>Hobbies</label>
@@ -144,17 +150,17 @@ const Form = () => {
                 {hobby}
               </label>
             ))}
-            {touched.hobbies && errors.hobbies ? <p>{errors.hobbies}</p> : null}
+            {touched.hobbies && errors.hobbies ? <p className="formError">{errors.hobbies}</p> : null}
           </div>
           <div className="inputField">
             <label>Status</label>
             <input
-              type="text"
+              type="checkbox"
               name="status"
               value={values.status}
               onChange={handleChange}
             />
-            {touched.status && errors.status ? <p>{errors.status}</p> : null}
+            {touched.status && errors.status ? <p className="formError">{errors.status}</p> : null}
           </div>
           <button type="submit">Submit</button>
         </form>

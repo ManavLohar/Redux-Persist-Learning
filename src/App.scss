@@ -1,0 +1,28 @@
+.mainBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100%;
+  background-color: lightblue;
+  .tableBox {
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    margin: 1rem;
+    padding: 2rem;
+    background-color: white;
+    > button {
+      width: fit-content;
+    }
+    > table {
+      border: 1px solid black;
+      thead th,
+      tbody td {
+        border: 1px solid black;
+        padding: 2px;
+      }
+    }
+  }
+}

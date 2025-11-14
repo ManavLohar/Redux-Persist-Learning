@@ -15,7 +15,7 @@ const initialState = {
     hobbies: [],
     status: false,
   },
-  formVisibility: false,
+  formVisibility: true,
 };
 
 export const testSlice = createSlice({
@@ -25,9 +25,12 @@ export const testSlice = createSlice({
     toggleFormVisibility: (state) => {
       state.formVisibility = !state.formVisibility;
     },
+    addUser: (state, action) => {
+      state.userData.push(action.payload);
+    },
   },
 });
 
-export const { toggleFormVisibility } = testSlice.reducer;  
+export const { toggleFormVisibility, addUser } = testSlice.actions;
 
-export default testSlice.actions;
+export default testSlice.reducer;
