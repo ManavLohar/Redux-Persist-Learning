@@ -15,8 +15,10 @@ const initialState = {
     hobbies: [],
     status: false,
   },
+  filter: true,
   formVisibility: false,
-  // user: {},
+  deleteConfirmBoxVisibility: false,
+  selectedUser: [],
 };
 
 export const testSlice = createSlice({
@@ -25,6 +27,9 @@ export const testSlice = createSlice({
   reducers: {
     toggleFormVisibility: (state) => {
       state.formVisibility = !state.formVisibility;
+    },
+    toggleDeleteBoxVisibility: (state) => {
+      state.deleteConfirmBoxVisibility = !state.deleteConfirmBoxVisibility;
     },
     addUser: (state, action) => {
       state.userData.push(action.payload);
@@ -42,18 +47,42 @@ export const testSlice = createSlice({
       }
     },
     deleteUser: (state, action) => {
-      console.log(action.payload);
-      state.userData = userData.filter((user) => user.id !== action.payload);
+      state.userData = state.userData.filter(
+        (user) => user.id !== action.payload
+      );
+    },
+    handleSelectedUser: (state, action) => {
+      let userId = action.payload;
+      if (state.selectedUser?.includes(userId)) {
+        const filteredUser = state.selectedUser.filter(
+          (user) => user !== userId
+        );
+        state.selectedUser = filteredUser;
+      } else {
+        if (!state.selectedUser) state.selectedUser = [];
+        state.selectedUser?.push(userId);
+      }
+    },
+    deleteAll: (state, action) => {
+      for (let i = 0; i <= state.selectedUser.length; i++) {
+        state.userData = state.userData.filter(
+          (user) => user.id !== state.selectedUser[i]
+        );
+      }
+      state.selectedUser = [];
     },
   },
 });
 
 export const {
   toggleFormVisibility,
+  toggleDeleteBoxVisibility,
   addUser,
   setCurrentUser,
   editUser,
   deleteUser,
+  handleSelectedUser,
+  deleteAll,
 } = testSlice.actions;
 
 export default testSlice.reducer;

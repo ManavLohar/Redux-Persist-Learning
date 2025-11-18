@@ -8,6 +8,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: rgba(0, 0, 0, 0.477);
   .formBox {
     display: flex;
     width: 500px;
@@ -19,7 +20,7 @@
     position: relative;
     overflow: hidden;
     overflow-y: auto;
-    box-shadow: 1px 1px 10px black;
+    // box-shadow: 1px 1px 10px black;
     scrollbar-width: none;
     .closeBtn {
       position: absolute;

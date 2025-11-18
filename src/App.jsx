@@ -1,20 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import "./App.scss";
 import Form from "./components/Form";
 import { FaRegEdit } from "react-icons/fa";
 import { MdOutlineDelete } from "react-icons/md";
 import {
+  deleteAll,
   deleteUser,
+  handleSelectedUser,
   setCurrentUser,
+  toggleDeleteBoxVisibility,
   toggleFormVisibility,
 } from "./components/redux/slices/testSlice";
+import DeleteConfirmationBox from "./components/DeleteConfirmationBox/DeleteConfirmationBox";
 
 const App = () => {
   const dispatch = useDispatch();
   const userData = useSelector((state) => state.testSlice.userData);
   const formVisibility = useSelector((state) => state.testSlice.formVisibility);
-  // console.log("formVisibility: ", formVisibility);
 
   const emptyUser = {
     id: "",
@@ -29,18 +32,29 @@ const App = () => {
     status: false,
   };
 
+  const deleteBoxVisibility = useSelector(
+    (state) => state.testSlice.deleteConfirmBoxVisibility
+  );
+  const selectedUser = useSelector((state) => state.testSlice.selectedUser);
+  const [userId, setUserId] = useState("");
+
   return (
     <>
       <div className="mainBox">
         <div className="tableBox">
-          <button
-            onClick={() => {
-              dispatch(setCurrentUser(emptyUser));
-              dispatch(toggleFormVisibility());
-            }}
-          >
-            Add User
-          </button>
+          <div className="tableBtn">
+            <button
+              onClick={() => {
+                dispatch(setCurrentUser(emptyUser));
+                dispatch(toggleFormVisibility());
+              }}
+            >
+              Add User
+            </button>
+            {selectedUser?.length > 0 ? (
+              <button onClick={() => dispatch(deleteAll())}>Delete All</button>
+            ) : null}
+          </div>
           <table>
             <thead>
               <tr>
@@ -54,7 +68,17 @@ const App = () => {
               {userData &&
                 userData.map((user, index) => (
                   <tr key={index}>
-                    <td>{index + 1}</td>
+                    <td>
+                      <input
+                        type="checkbox"
+                        value={user.id}
+                        checked={selectedUser?.includes(user.id)}
+                        onChange={(e) =>
+                          dispatch(handleSelectedUser(e.target.value))
+                        }
+                      />{" "}
+                      {index + 1}
+                    </td>
                     <td>{user.name}</td>
                     <td>{user.email}</td>
                     <td>
@@ -66,7 +90,11 @@ const App = () => {
                           }}
                         />
                         <MdOutlineDelete
-                          onClick={() => dispatch(deleteUser(user.id))}
+                          // onClick={() => dispatch(deleteUser(user.id))}
+                          onClick={() => {
+                            setUserId(user.id);
+                            dispatch(toggleDeleteBoxVisibility());
+                          }}
                         />
                       </div>
                     </td>
@@ -78,6 +106,9 @@ const App = () => {
       </div>
 
       {formVisibility ? <Form /> : null}
+      {deleteBoxVisibility ? (
+        <DeleteConfirmationBox userId={userId} setUserId={setUserId} />
+      ) : null}
     </>
   );
 };
